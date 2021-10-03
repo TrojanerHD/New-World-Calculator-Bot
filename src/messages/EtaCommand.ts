@@ -61,7 +61,7 @@ export default class EtaCommand extends Command {
     );
 
     return {
-      reply: `Your queue is estimated to be finished at <t:${Math.round(
+      reply: `<@${userId}>'s queue is estimated to be finished at <t:${Math.round(
         date.getTime() / 1000
       )}:T> (<t:${Math.round(date.getTime() / 1000)}:R>)`,
     };
