@@ -8,6 +8,7 @@ import {
   Message,
   Role,
   Snowflake,
+  TextChannel,
 } from 'discord.js';
 import Settings from '../Settings';
 import CommandPermissions from './CommandPermissions';
@@ -65,7 +66,7 @@ export default class MessageHandler {
       const log: UserData = LogCommand._logs.get(userId)!;
       if (
         (log.times.length >= 1 &&
-          Number(message.content) > log.times[log.times.length - 1].position) ||
+          Number(message.content) >= log.times[log.times.length - 1].position) ||
         isNaN(Number(message.content))
       ) {
         message.react('❌').catch(console.error);
@@ -77,6 +78,10 @@ export default class MessageHandler {
       });
       LogCommand._logs.set(userId, log);
       message.react('✅').catch(console.error);
+      if (message.channel.type === 'GUILD_TEXT')
+        (message.channel as TextChannel)
+          .setTopic(EtaCommand.calculateEta(userId).reply)
+          .catch(console.error);
     }
   }
 

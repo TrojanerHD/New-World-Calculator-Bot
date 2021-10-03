@@ -2,6 +2,7 @@ import {
   ApplicationCommandData,
   CommandInteractionOption,
   Interaction,
+  Snowflake,
 } from 'discord.js';
 import Command, { Reply } from './Command';
 import LogCommand, { UserData } from './LogCommand';
@@ -11,18 +12,31 @@ export default class EtaCommand extends Command {
     name: 'eta',
     description:
       'Show the eta until you are estimated to be logged in (only available if currently logging)',
+    options: [
+      {
+        type: 6,
+        name: 'user',
+        description: 'Show eta of given user',
+      },
+    ],
   };
   handleCommand(
-    _args: readonly CommandInteractionOption[],
+    args: readonly CommandInteractionOption[],
     interaction: Interaction
   ): Reply {
-    if (!LogCommand._logs.has(interaction.user.id))
+    if (args.length === 1 && args[0].user)
+      return EtaCommand.calculateEta(args[0].user.id);
+    return EtaCommand.calculateEta(interaction.user.id);
+  }
+
+  static calculateEta(userId: Snowflake): Reply {
+    if (!LogCommand._logs.has(userId))
       return {
         reply: 'Error: No logging currently running',
         ephemeral: true,
       };
 
-    const log: UserData = LogCommand._logs.get(interaction.user.id)!;
+    const log: UserData = LogCommand._logs.get(userId)!;
     if (log.times.length <= 1)
       return {
         reply: 'Error: Not enough data to calculate estimate time',

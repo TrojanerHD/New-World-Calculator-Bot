@@ -5,7 +5,7 @@ import {
 } from 'discord.js';
 
 export interface Reply {
-  reply?: string | null;
+  reply: string;
   ephemeral?: boolean;
   afterResponse?: () => void;
 }
