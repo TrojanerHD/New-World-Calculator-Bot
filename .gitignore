@@ -2,4 +2,5 @@
 /build/
 /node_modules/
 .env
+settings.json
 yarn.lock
