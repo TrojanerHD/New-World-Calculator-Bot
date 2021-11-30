@@ -67,7 +67,7 @@ export default class MessageHandler {
       if (
         (log.times.length >= 1 &&
           Number(message.content) >= log.times[log.times.length - 1].position) ||
-        isNaN(Number(message.content))
+          isNaN(Number(message.content)) || Number(message.content) < 0 || Number(message.content) === Infinity || !Number.isInteger(Number(message.content))
       ) {
         message.react('❌').catch(console.error);
         return;
